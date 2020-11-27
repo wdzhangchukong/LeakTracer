@@ -117,7 +117,10 @@ MemoryTrace::init_no_alloc_allowed()
 			if (curfunc->libcsymbol) {
 				*curfunc->localredirect = curfunc->libcsymbol;
 			} else {
-				*curfunc->localredirect = dlsym(RTLD_DEFAULT, curfunc->symbname); 
+				*curfunc->localredirect = dlsym(RTLD_DEFAULT, curfunc->symbname);
+				if (dlerror() != nullptr) {
+					*curfunc->localredirect = dlsym(RTLD_NEXT, curfunc->symbname);
+				}
 			}
 		}
 	}
